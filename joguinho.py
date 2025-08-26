@@ -10,6 +10,10 @@ class circulo:
     def desenha(self):
         pyxel.circ(self.x, self.y, self.raio, self.cor)
 
+    def move(self, dx, dy):
+        self.x += dx
+        self.y += dy
+
 class parede:
     def __init__ (self,x,y,largura,altura):
         self.x = x
@@ -25,6 +29,7 @@ class labirinto:
     def __init__ (self):
         self.c = circulo(10,10)
 
+
         self.p3borda = parede(0, 0, 5, 100)
         self.p4borda = parede(0, 0,80, 5)
         self.p5borda = parede(0, 95, 80, 5)
@@ -36,18 +41,43 @@ class labirinto:
         pyxel.init(80, 100, title="Labirinto", fps=60)
         pyxel.run(self.update, self.draw)
 
+    def colisao( self, circulo, retangulo):
+        c_dir = circulo.x + circulo.raio
+        c_esq = circulo.x - circulo.raio
+        c_topo = circulo.y - circulo.raio
+        c_base = circulo.y + circulo.raio
+
+        r_dir = retangulo.x + retangulo.largura
+        r_esq = retangulo.x
+        r_topo = retangulo.y
+        r_baixo = retangulo.y + retangulo.altura
+
+        if (c_dir >= r_esq and
+            c_esq <= r_dir and
+            c_base >= r_topo and
+            c_topo <= r_baixo):
+            return True
+        else:
+            return False
+
     def update(self):
         #movimento do circulo
+        dx = 0
+        dy = 0
+
         if pyxel.btn(pyxel.KEY_UP):
-            self.c.y -= 0.5
+            dy -= 0.5
         if pyxel.btn(pyxel.KEY_DOWN):
-            self.c.y += 0.5
+            dy += 0.5
         if pyxel.btn(pyxel.KEY_LEFT):
-            self.c.x -= 0.5
+            dx -= 0.5
         if pyxel.btn(pyxel.KEY_RIGHT):
-            self.c.x += 0.5
+            dx += 0.5
+        self.c.move(dx, dy)
+
         #colisão com as paredes
-        
+        if self.colisao(self.c, self.obs1) or self.colisao(self.c, self.obs2):
+            self.c.move(-dx, -dy)
 
     def draw(self):
         pyxel.cls(0)
