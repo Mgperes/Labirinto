@@ -1,6 +1,6 @@
 import pyxel
 
-class circulo:
+class personagem:
     def __init__ (self,x,y):
         self.x = x
         self.y = y
@@ -8,7 +8,10 @@ class circulo:
         self.cor = 7
 
     def desenha(self):
-        pyxel.circ(self.x, self.y, self.raio, self.cor)
+        #pyxel.circ(self.x, self.y, self.raio, self.cor)
+
+        #          x        y   , img, x da memória, y da memória, largura, altura, cor de transparência
+        pyxel.blt(self.x, self.y, 0, 0, 0, 16, 16, 0)  # Desenha o personagem usando a imagem carregada
 
     def move(self, dx, dy):
         self.x += dx
@@ -27,7 +30,7 @@ class parede:
 
 class labirinto:
     def __init__ (self):
-        self.c = circulo(10,10)
+        self.c = personagem(10,10)
         #largura das paredes
         self.paredes = []
         # Cria as paredes para desviar
@@ -49,6 +52,7 @@ class labirinto:
         pyxel.init(80, 100, title="Labirinto", fps=60)
         # carregar imagens
         pyxel.image(0).load(0,0,"cat_16x16.png")
+        pyxel.image(1).load(0,16,"personagem_56x72.png")
 
 
         # Ultima linha
